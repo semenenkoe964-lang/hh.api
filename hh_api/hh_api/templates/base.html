@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HH Parser{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #09f;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background-color: #eee;
+            padding: 0.5rem;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #09f;
+            font-weight: bold;
+        }
+        main {
+            padding: 20px;
+            max-width: 960px;
+            margin: 0 auto;
+            background: white;
+            min-height: 60vh;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #ddd;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Парсер вакансий с hh.ru</h1>
+    </header>
+    <nav>
+        <a href="{% url 'index' %}">Каталог</a>
+        <a href="{% url 'search_work' %}">Поиск</a>
+    </nav>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        &copy; 2025 HH Parser
+    </footer>
+</body>
+</html>

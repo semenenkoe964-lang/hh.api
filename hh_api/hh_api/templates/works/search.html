@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Поиск вакансий{% endblock %}
+
+{% block content %}
+    <h2>Поиск вакансий</h2>
+
+    <form method="get" style="margin-bottom: 20px;">
+        <div>
+            <label for="query">Ключевое слово:</label>
+            <input type="text" name="q" id="query" value="{{ query|default:'' }}" placeholder="Например: Python разработчик">
+        </div>
+
+        <div style="margin-top: 10px;">
+            <label for="sort">Сортировка:</label>
+            <select name="sort" id="sort">
+                <option value="">— Выберите —</option>
+                <option value="default" {% if sort == 'default' or sort %}selected{% endif %}>
+                    По умолчанию
+                </option>
+                <option value="popularity" {% if sort == 'popularity' %}selected{% endif %}>
+                    Самые популярные
+                </option>
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>
+                    Самые новые
+                </option>
+                <option value="salary_desc" {% if sort == 'salary_desc' %}selected{% endif %}>
+                    По убыванию зарплаты
+                </option>
+                <option value="salary_asc" {% if sort == 'salary_asc' %}selected{% endif %}>
+                    По возрастанию зарплаты
+                </option>
+            </select>
+        </div>
+
+        <div style="margin-top: 10px;">
+            <button type="submit">Найти</button>
+            {% if query or sort %}
+                <a href="{% url 'search_work' %}" style="margin-left: 10px;">Сбросить</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if vacancies %}
+        <h3>Результаты поиска ({{ vacancies_count }}):</h3>
+        {% for vacancy in vacancies %}
+        <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+            <h3><a href="{% url 'work_detail' vacancy.id %}">{{ vacancy.name }}</a></h3>
+            {% if vacancy.salary_lower %}
+                <p><strong>Зарплата:</strong> {{ vacancy.salary_lower }}–{{ vacancy.salary_upper }} рублей</p>
+            {% endif %}
+            <p><strong>Компания:</strong> {{ vacancy.employer.name }}</p>
+            <p><strong>Регион:</strong> {{ vacancy.city.name }}</p>
+        </div>
+        {% endfor %}
+    {% elif query or sort %}
+        <p>По вашему запросу "{{ query|default:'(без ключевого слова)' }}" ничего не найдено.</p>
+    {% endif %}
+
+    {% if vacancies %}
+        <!-- ПАГИНАЦИЯ -->
+        <div style="margin-top: 30px; text-align: center;">
+            {% if vacancies.has_previous %}
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}page=1"
+                   style="margin: 0 8px;">&laquo; Первая</a>
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}page={{ vacancies.previous_page_number }}"
+                   style="margin: 0 8px;">Назад</a>
+            {% endif %}
+
+            <span style="margin: 0 16px;">
+                Страница {{ vacancies.number }} из {{ vacancies.paginator.num_pages }}
+            </span>
+
+            {% if vacancies.has_next %}
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}page={{ vacancies.next_page_number }}"
+                   style="margin: 0 8px;">Вперёд</a>
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}page={{ vacancies.paginator.num_pages }}"
+                   style="margin: 0 8px;">Последняя &raquo;</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

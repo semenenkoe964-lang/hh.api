@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vacancy.name }}{% endblock %}
+
+{% block content %}
+    <h2>{{ vacancy.name }}</h2>
+    <p><strong>Компания:</strong> {{ vacancy.employer.name }}</p>
+    <p><strong>Регион:</strong> {{ vacancy.city.name }}</p>
+    {% if vacancy.salary_lower %}
+        <p><strong>Зарплата:</strong> {{ vacancy.salary_lower }}-{{ vacancy.salary_lower }}</p>
+    {% endif %}
+    {% if vacancy.category %}
+        <p><strong>Категория:</strong> {{ vacancy.category.name }}</p>
+    {% endif %}
+
+    <!--
+     {% if vacancy.published_at %} 
+        <p><strong>Опубликовано:</strong> {{ vacancy.published_at|date:"d.m.Y H:i" }}</p>
+    {% endif %} 
+
+    {% if vacancy.url %}
+        <p><a href="{{ vacancy.url }}" target="_blank">Посмотреть на hh.ru</a></p>
+    {% endif %}
+    -->
+
+    <div style="margin-top: 20px;">
+        {% if vacancy.description %}
+            <h3>Требования</h3>
+            <p>{{ vacancy.description|safe }}</p>
+        {% else %}
+            <p>Работодатель не предоставил описания вакансии...</p>
+        {% endif %}
+
+        <!-- {% if vacancy.snippet.responsibility %}
+            <h3>Обязанности</h3>
+            <p>{{ vacancy.snippet.responsibility|safe }}</p>
+        {% endif %}
+        -->
+    </div>
+
+    <p><a href="{% url 'index' %}">&larr; Назад к каталогу</a></p>
+{% endblock %}
